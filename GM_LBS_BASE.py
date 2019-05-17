@@ -79,7 +79,11 @@ def GM_LD_Code(time_delay) :
 
                                 print("==========================================================")
                                 print(data)
-                                d.SQL_UpdateMoldLocNew(data)    # mold_loc data update       
+                                ret = d.SQL_getMoldLocNewIndex(data[0]) # data Check
+                                if(ret < 0) : 
+                                        d.SQL_InsertMoldLocNew(data)
+                                else : 
+                                        d.SQL_UpdateMoldLocNew_GM(data)    # mold_loc data update       
                                 pdb.set_trace()
 
                         except : 

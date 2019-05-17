@@ -347,6 +347,7 @@ class BASEClass :
 
                 self.db.commit()
 
+
         #====================================================================================
         # getSqlMoldLoc Function
         #------------------------------------------------------------------------------------
@@ -358,6 +359,61 @@ class BASEClass :
                         print(r)
                 #a = r[0]
                 return(r)
+
+
+
+        #====================================================================================
+        # SQL_UpdateMoldLocNew Function
+        #------------------------------------------------------------------------------------
+        def SQL_InsertMoldLocNew(self, data) :
+
+		try : 
+
+		        #query = "INSERT into mold_loc SET mold_locX=%s, mold_locY=%s, mold_locZ=%s, mold_productco=%s, mold_managelocation=%s, mold_event=%s, mold_loc_datetime=%s, mold_batterylevel=%s, mold_flag=%s WHERE mold_blackbin_name=%s"
+                        query = "INSERT INTO mold_loc (mold_blackbin_name, mold_blackbin_mac, mold_locX, mold_locY, mold_locZ, mold_productco, mold_orglocation, mold_managelocation, mold_batterylevel, mold_flag, mold_event, mold_loc_datetime) VALUES(%s, %s, %s, %s, %s, %s, %s, %s,  %s, %s, %s, %s)"
+
+			#print(query)
+			self.curs.execute(query, (data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]))
+
+		        #for r in self.curs.fetchall() :
+		        #        print(r)
+
+		        self.db.commit()
+
+		except pymssql.DatabaseError, e : 
+			print('SQL_MSSQL_OPEN Error : ',i, e)
+
+			#self.SQL_MSSQL_OPEN()		#HA171113 New Add
+
+		except : 
+			print "Another Exception occured, SQL_InsertMoldLocNew ERROR !!!"
+
+
+        #====================================================================================
+        # SQL_UpdateMoldLocNew_GM Function
+        #------------------------------------------------------------------------------------
+        def SQL_UpdateMoldLocNew_GM(self, data) :
+
+		try : 
+
+		        query = "UPDATE mold_loc SET mold_locX=%s, mold_locY=%s, mold_locZ=%s, mold_productco=%s, mold_managelocation=%s, mold_event=%s, mold_loc_datetime=%s, mold_batterylevel=%s, mold_flag=%s WHERE mold_blackbin_name=%s"
+
+			self.curs.execute(query, (data[2], data[3], data[4], data[5], data[7], data[10], data[11], data[8], data[9], data[0]))
+
+		        #for r in self.curs.fetchall() :
+		        #        print(r)
+
+		        self.db.commit()
+
+		except pymssql.DatabaseError, e : 
+			print('SQL_MSSQL_OPEN Error : ',i, e)
+
+			#self.SQL_MSSQL_OPEN()		#HA171113 New Add
+
+		except : 
+			print "Another Exception occured, SQL_UpdateMoldLocNew_GM ERROR !!!"
+
+
 
         #====================================================================================
         # SQL_UpdateMoldLocNew Function
@@ -465,6 +521,7 @@ class BASEClass :
 			return(int(a))
 		except :			
 			print('SQL_getMoldLocNewIndex Error :: Unknown table')
+                        return(-1)
 
         #====================================================================================
         # Mold list check Function
