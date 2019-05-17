@@ -191,7 +191,7 @@ class BASEClass :
         def getSqlBatteryLevel(self, MoldID) :
                 ret = []
 
-                query = "select top 1 blackbin_batterylevel from " + self.gtable_name + " where (blackbin_name = %s) order by blackbin_index DESC"
+                query = "select top 1 blackbin_batterylevel, blackbin_macaddress from " + self.gtable_name + " where (blackbin_name = %s) order by blackbin_index DESC"
                 #print(query)
                 self.curs.execute(query, (MoldID))
                 for r in self.curs.fetchall() :
@@ -199,7 +199,7 @@ class BASEClass :
                         print(r)
 		a = int(r[0], 16)
 		print(a)
-                return(str(a))
+                return(str(a), r[1])
 
         #====================================================================================
         # getSqlBleScanner Function
@@ -312,9 +312,11 @@ class BASEClass :
                 try : 
                         ret = []
 
-                        query = "select top 10 * from " + self.gtable_name + " where (blackbin_name like 'LD%') and ( len(blackbin_macaddress) > 5 ) and ( len(blackbin_macaddress) < 8 ) and ( blackbin_macaddress >= '0'  and blackbin_macaddress <= 'z') and (blackbin_receivedatetime > %s ) and (blackbin_receivedatetime < %s )order by blackbin_name, blackbin_index asc;"
+                        print(sDate, eDate) 
 
+                        query = ( "select top 10 blackbin_macaddress, blackbin_name, MAX(convert(int, blackbin_rssi)) as RSSI_MAX  from " + self.gtable_name + " where (blackbin_name like 'LD%') and ( len(blackbin_macaddress) > 5 ) and ( len(blackbin_macaddress) < 8 ) and ( blackbin_macaddress >= '0'  and blackbin_macaddress <= 'z') and (blackbin_receivedatetime > %s ) and (blackbin_receivedatetime < %s )  group by blackbin_macaddress, blackbin_name order by blackbin_macaddress, blackbin_name asc;")
 
+                        print(query)
                         self.curs.execute(query, (sDate, eDate))
                         for r in self.curs.fetchall() :
                                 ret.append(r)
